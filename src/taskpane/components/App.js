@@ -6,7 +6,7 @@ import Header from "./Header";
 import HeroList from "./HeroList";
 import Progress from "./Progress";
 
-import { toLongDate, toShortDate, toWeekDay } from "../utils/date";
+import { toLongDate, toShortDate, toWeekDay } from "../utils/dateUtils/date";
 
 /* global console, Excel, require */
 export default function App({ title, isOfficeInitialized }) {
