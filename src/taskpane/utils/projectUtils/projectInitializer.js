@@ -18,9 +18,9 @@ import {
   formatProjectHeaderRange,
   formatInitialMonthRange,
   formatWeekdayCell,
-} from "./projectFormatters";
+} from "./projectFormatter";
 
-import { toLongDate, toShortDate, toWeekDay } from "../dateUtils/dateFormatters";
+import { toLongDate, toShortDate, toWeekDay } from "../dateUtils/dateFormatter";
 
 /**
  * Initializes the project month calendar from the kick-off date.
