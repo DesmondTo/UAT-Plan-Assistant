@@ -3,6 +3,7 @@ import React from "react";
 import { DefaultButton } from "@fluentui/react";
 import { TextField } from "@fluentui/react";
 
+import { addProjectActivity } from "../../utils/activityUtils/projectActivityCreator";
 import FormActionContainer from "./FormActionContainer";
 
 function AddProjectActivityForm() {
@@ -16,7 +17,7 @@ function AddProjectActivityForm() {
         onChange={(e) => setProjectActivityTitle(e.target.value)}
       />
       <FormActionContainer>
-        <DefaultButton onClick={() => {}}>Add Project Activity</DefaultButton>
+        <DefaultButton onClick={() => addProjectActivity(projectActivityTitle)}>Add Project Activity</DefaultButton>
       </FormActionContainer>
     </form>
   );
