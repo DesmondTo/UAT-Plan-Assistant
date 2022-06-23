@@ -8,6 +8,7 @@ import InitializeProjectForm from "./form/InitializeProjectForm";
 import AddProjectActivityForm from "./form/AddProjectActivityForm";
 import AddActivityTypeForm from "./form/AddActivityTypeForm";
 import AddActivityForm from "./form/AddActivityForm";
+import AddTimelineForm from "./form/AddTimelineForm";
 import AddStatusKeyForm from "./form/AddStatusKeyForm";
 import AddActionPartyForm from "./form/AddActionPartyForm";
 import EditProjectForm from "./form/EditProjectForm";
@@ -22,6 +23,7 @@ const actionComponent = {
   addProjAct: <AddProjectActivityForm />,
   addActType: <AddActivityTypeForm />,
   addAct: <AddActivityForm />,
+  addTl: <AddTimelineForm />,
   addStat: <AddStatusKeyForm />,
   addActPar: <AddActionPartyForm />,
   editProj: <EditProjectForm />,
