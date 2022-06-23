@@ -1,4 +1,5 @@
 import { boldFontInRange } from "../fontUtils";
+import { changeFillColor } from "../fillUtils";
 
 /**
  * Adds activity type to the selected cell in current worksheet.
@@ -12,7 +13,9 @@ export const addActivityType = async (activityTypeTitle) => {
     await context.sync();
     currentActiveCell.values = activityTypeTitle;
 
-    await boldFontInRange(currentWorksheet.getRange(currentActiveCell.address));
+    const currActiveCellRange = currentWorksheet.getRange(currentActiveCell.address);
+    await boldFontInRange(currActiveCellRange);
+    await changeFillColor(currActiveCellRange.getColumnsBefore(1), "#94C5EE");
 
     await context.sync();
   }).catch((error) => {
