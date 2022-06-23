@@ -6,7 +6,7 @@ import Progress from "./Progress";
 import FormContainer from "./form/FormContainer";
 import InitializeProjectForm from "./form/InitializeProjectForm";
 import AddProjectActivityForm from "./form/AddProjectActivityForm";
-import AddActivityTypeForm from "./form/AddActivityType";
+import AddActivityTypeForm from "./form/AddActivityTypeForm";
 import AddActivityForm from "./form/AddActivityForm";
 import AddStatusKeyForm from "./form/AddStatusKeyForm";
 import AddActionPartyForm from "./form/AddActionPartyForm";
