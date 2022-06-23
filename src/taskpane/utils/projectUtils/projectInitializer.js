@@ -33,7 +33,7 @@ const initializeProjectMonthCalendar = async (kickOffDate, dayNums) => {
     const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
     const initialMonthRange = currentWorksheet
       .getRange(PROJECT_CALENDAR_MONTH_START_INDEX_EXCLUSIVE)
-      .getColumnsAfter(dayNums + 1);
+      .getColumnsAfter(dayNums);
 
     initialMonthRange.merge();
     initialMonthRange.values = toShortDate(kickOffDate);
@@ -49,12 +49,12 @@ const initializeProjectMonthCalendar = async (kickOffDate, dayNums) => {
  * @param {number} kickOffDay
  * @param {number} dayNums The number of days until the end of the month starting from the kick-off date.
  */
-const initializeProjectWeekdayCalendar = async (kickOffWeekday, dayNums) => {
+const initializeProjectWeekdayCalendar = async (firstWeekday, dayNums) => {
   await Excel.run(async (context) => {
     const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
     const initialWeekDayRange = currentWorksheet
       .getRange(PROJECT_CALENDAR_WEEKDAY_START_INDEX_EXCLUSIVE)
-      .getColumnsAfter(dayNums + 1);
+      .getColumnsAfter(dayNums);
     initialWeekDayRange.load("columnCount");
     await context.sync();
 
@@ -64,7 +64,7 @@ const initializeProjectWeekdayCalendar = async (kickOffWeekday, dayNums) => {
       await context.sync();
 
       const weekdayNum = 7;
-      currColumn.values = toWeekDay((kickOffWeekday + col) % weekdayNum);
+      currColumn.values = toWeekDay((firstWeekday + col) % weekdayNum);
       await formatWeekdayCell(currColumn.values, currColumn.format);
     }
 
@@ -78,12 +78,12 @@ const initializeProjectWeekdayCalendar = async (kickOffWeekday, dayNums) => {
  * @param {number} kickOffDay
  * @param {number} dayNums The number of days until the end of the month starting from the kick-off date.
  */
-const initializeProjectDateCalendar = async (kickOffDay, dayNums) => {
+const initializeProjectDateCalendar = async (dayNums) => {
   await Excel.run(async (context) => {
     const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
     const initialDateRange = currentWorksheet
       .getRange(PROJECT_CALENDAR_DATE_START_INDEX_EXCLUSIVE)
-      .getColumnsAfter(dayNums + 1);
+      .getColumnsAfter(dayNums);
     initialDateRange.load("columnCount");
     await context.sync();
     for (let col = 0; col < initialDateRange.columnCount; col++) {
@@ -91,7 +91,7 @@ const initializeProjectDateCalendar = async (kickOffDay, dayNums) => {
       currColumn.load("values");
       await context.sync();
 
-      currColumn.values = kickOffDay + col;
+      currColumn.values = col + 1;
     }
     autoFitRange(initialDateRange);
 
@@ -104,13 +104,12 @@ const initializeProjectCalendar = async (kickOffDate) => {
     const kickOffDateObj = new Date(kickOffDate);
     const kickOffYear = kickOffDateObj.getFullYear();
     const kickOffMonth = kickOffDateObj.getMonth() + 1;
-    const kickOffDay = kickOffDateObj.getDate();
-    const kickOffWeekday = kickOffDateObj.getDay();
-    const dayNums = new Date(kickOffYear, kickOffMonth, 0).getDate() - kickOffDay;
+    const firstWeekday = new Date(kickOffYear, kickOffMonth, 1).getDay();
+    const dayNums = new Date(kickOffYear, kickOffMonth, 0).getDate();
 
     await initializeProjectMonthCalendar(kickOffDate, dayNums);
-    await initializeProjectWeekdayCalendar(kickOffWeekday, dayNums);
-    await initializeProjectDateCalendar(kickOffDay, dayNums);
+    await initializeProjectWeekdayCalendar(firstWeekday, dayNums);
+    await initializeProjectDateCalendar(dayNums);
 
     await context.sync();
   }).catch((error) => {
