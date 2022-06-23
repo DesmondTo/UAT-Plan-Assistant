@@ -14,8 +14,8 @@ const stackTokens = { childrenGap: 20 };
 function ProjectActivityDropdown({selectProjectActivity}) {
   const selectedProjectActivity = React.useState()[0];
 
-  const onChange = (event, item) => {
-    selectProjectActivity(item.key);
+  const onChange = (event, projectActivityObj) => {
+    selectProjectActivity(projectActivityObj);
   };
 
   const [projectActivities, setProjectActivities] = useState([]);
