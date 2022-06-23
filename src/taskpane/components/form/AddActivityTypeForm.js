@@ -15,7 +15,6 @@ function AddActivityTypeForm() {
 
   return (
     <form>
-      {/* <ProjectActivityDropdown selectProjectActivity={setProjectActivity} /> */}
       <TextField
         label="Step 1: Enter your activity type title:"
         value={activityTypeTitle}
