@@ -1,4 +1,5 @@
 import {
+  PROJECT_CALENDAR_CELL_COLUMN_WIDTH,
   PROJECT_CALENDAR_MONTH_CALENDAR_FILL_COLOR_DARK,
   PROJECT_CALENDAR_MONTH_CALENDAR_FILL_COLOR_LIGHT,
   PROJECT_SATURDAY_CALENDAR_CELL_FILL_COLOR,
@@ -39,6 +40,8 @@ export const formatMonthCalendar = async (monthRange, monthIsEven) => {
  */
 export const formatWeekdayCell = async (currColumnValue, currColumnFormat) => {
   await Excel.run(async (context) => {
+    currColumnFormat.horizontalAlignment = "Center";
+
     if (currColumnValue == "Sa") {
       currColumnFormat.fill.color = PROJECT_SATURDAY_CALENDAR_CELL_FILL_COLOR;
     }
@@ -46,6 +49,18 @@ export const formatWeekdayCell = async (currColumnValue, currColumnFormat) => {
       currColumnFormat.fill.color = PROJECT_SUNDAY_CALENDAR_CELL_FILL_COLOR;
     }
 
+    await context.sync();
+  });
+};
+
+/**
+ * Formats the date cell of the month calendar of the project.
+ * @param {Excel.RangeFormat} currColumnFormat
+ */
+export const formatDateCell = async (currColumnFormat) => {
+  await Excel.run(async (context) => {
+    currColumnFormat.horizontalAlignment = "Center";
+    currColumnFormat.columnWidth = PROJECT_CALENDAR_CELL_COLUMN_WIDTH;
     await context.sync();
   });
 };

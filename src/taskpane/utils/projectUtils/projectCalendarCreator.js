@@ -1,5 +1,5 @@
 import { autoFitRange } from "./projectFormatter";
-import { formatMonthCalendar, formatWeekdayCell } from "../projectUtils/projectCalendarFormatter";
+import { formatMonthCalendar, formatWeekdayCell, formatDateCell } from "../projectUtils/projectCalendarFormatter";
 import { toShortDate, toWeekDay } from "../dateUtils/dateFormatter";
 import { getDayNumFromKickOffMonth, getDateStringArrayIncreasedByMonth } from "../dateUtils/dateGetter";
 
@@ -92,12 +92,12 @@ const addProjectDateCalendar = async (context, monthRange) => {
     await context.sync();
     for (let col = 0; col < weekdayRange.columnCount; col++) {
       const currColumn = weekdayRange.getColumn(col);
-      currColumn.load("values");
+      currColumn.load(["values", "format"]);
       await context.sync();
 
       currColumn.values = col + 1;
+      await formatDateCell(currColumn.format);
     }
-    await autoFitRange(weekdayRange);
 
     await context.sync();
   });
