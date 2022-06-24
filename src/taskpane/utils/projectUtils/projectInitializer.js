@@ -4,127 +4,18 @@ import {
   PROJECT_HEADER_RANGE,
   PROJECT_KICKOFF_DATE_RANGE,
   PROJECT_COLUMN_HEADER_RANGE,
-  PROJECT_CALENDAR_MONTH_START_INDEX_EXCLUSIVE,
-  PROJECT_CALENDAR_WEEKDAY_START_INDEX_EXCLUSIVE,
-  PROJECT_CALENDAR_DATE_START_INDEX_EXCLUSIVE,
 } from "../../../constants/projectConstants";
 
 import {
   autoFitEntireWorksheet,
-  autoFitRange,
   formatProjectNameRange,
   formatProjectKickOffDateRange,
   formatProjectColumnHeaderRange,
   formatProjectHeaderRange,
-  formatWeekdayCell,
 } from "./projectFormatter";
 
-import { formatMonthCalendar } from "./projectCalendarFormatter";
-
-import { toLongDate, toShortDate, toWeekDay } from "../dateUtils/dateFormatter";
-
-/**
- * Initializes the project month calendar from the kick-off date.
- * Only the month of the kick-off date is initialized.
- * @param {string} kickOffDate A date of when the project started.
- * @param {number} dayNums The number of days until the end of the month starting from the kick-off date.
- */
-const initializeProjectMonthCalendar = async (kickOffDate, dayNums) => {
-  await Excel.run(async (context) => {
-    const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
-    const initialMonthRange = currentWorksheet
-      .getRange(PROJECT_CALENDAR_MONTH_START_INDEX_EXCLUSIVE)
-      .getColumnsAfter(dayNums);
-
-    initialMonthRange.merge();
-    initialMonthRange.values = toShortDate(kickOffDate);
-    const date = new Date(kickOffDate);
-    const kickOffMonth = date.getMonth();
-    const monthIsEven = kickOffMonth % 2 === 0;
-    await formatMonthCalendar(initialMonthRange, monthIsEven);
-
-    await context.sync();
-  });
-};
-
-/**
- * Initializes the project weekday calendar from the kick-off date.
- * @param {string} firstWeekday The first weekday of month when the project started.
- * @param {number} kickOffDay
- * @param {number} dayNums The number of days in the of the kick-off month.
- */
-const initializeProjectWeekdayCalendar = async (firstWeekday, dayNums) => {
-  await Excel.run(async (context) => {
-    const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
-    const initialWeekDayRange = currentWorksheet
-      .getRange(PROJECT_CALENDAR_WEEKDAY_START_INDEX_EXCLUSIVE)
-      .getColumnsAfter(dayNums);
-    initialWeekDayRange.load("columnCount");
-    await context.sync();
-
-    for (let col = 0; col < initialWeekDayRange.columnCount; col++) {
-      const currColumn = initialWeekDayRange.getColumn(col);
-      currColumn.load(["format", "values"]);
-      await context.sync();
-
-      const weekdayNum = 7;
-      currColumn.values = toWeekDay((firstWeekday + col) % weekdayNum);
-      await formatWeekdayCell(currColumn.values, currColumn.format);
-    }
-
-    await context.sync();
-  });
-};
-
-/**
- * Initializes the project date calendar from the kick-off date.
- * @param {string} kickOffDate A date of when the project started.
- * @param {number} kickOffDay
- * @param {number} dayNums The number of days until the end of the month starting from the kick-off date.
- */
-const initializeProjectDateCalendar = async (dayNums) => {
-  await Excel.run(async (context) => {
-    const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
-    const initialDateRange = currentWorksheet
-      .getRange(PROJECT_CALENDAR_DATE_START_INDEX_EXCLUSIVE)
-      .getColumnsAfter(dayNums);
-    initialDateRange.load("columnCount");
-    await context.sync();
-    for (let col = 0; col < initialDateRange.columnCount; col++) {
-      const currColumn = initialDateRange.getColumn(col);
-      currColumn.load("values");
-      await context.sync();
-
-      currColumn.values = col + 1;
-    }
-    autoFitRange(initialDateRange);
-
-    await context.sync();
-  });
-};
-
-const initializeProjectCalendar = async (kickOffDate) => {
-  await Excel.run(async (context) => {
-    const kickOffDateObj = new Date(kickOffDate);
-    const kickOffYear = kickOffDateObj.getFullYear();
-    const kickOffMonth = kickOffDateObj.getMonth();
-    const firstWeekday = new Date(kickOffYear, kickOffMonth, 1).getDay();
-    // A hackish way to get the number of days in the month, 
-    // as it checks from the next month, need to plus one to the month.
-    const dayNums = new Date(kickOffYear, kickOffMonth + 1, 0).getDate();
-
-    await initializeProjectMonthCalendar(kickOffDate, dayNums);
-    await initializeProjectWeekdayCalendar(firstWeekday, dayNums);
-    await initializeProjectDateCalendar(dayNums);
-
-    await context.sync();
-  }).catch((error) => {
-    console.log("Error: " + error);
-    if (error instanceof OfficeExtension.Error) {
-      console.log("Debug info: " + JSON.stringify(error.debugInfo));
-    }
-  });
-};
+import { addCalendar } from "./projectCalendarCreator";
+import { toLongDate } from "../dateUtils/dateFormatter";
 
 /**
  * Initializes a project name header with proper formatting.
@@ -142,9 +33,9 @@ const initializeProjectNameHeader = async (currentWorksheet, projectName) => {
 };
 
 /**
- * Initializes a project name header with proper formatting.
+ * Initializes a project kick-off date header with proper formatting.
  * @param {Excel.Worksheet} currentWorksheet
- * @param {string} projectName
+ * @param {string} kickOffDate
  */
 const initializeProjectKickOffDateHeader = async (currentWorksheet, kickOffDate) => {
   await Excel.run(async (context) => {
@@ -157,9 +48,8 @@ const initializeProjectKickOffDateHeader = async (currentWorksheet, kickOffDate)
 };
 
 /**
- * Initializes a project name header with proper formatting.
+ * Initializes a project column headers with proper formatting.
  * @param {Excel.Worksheet} currentWorksheet
- * @param {string} projectName
  */
 const initializeProjectColumnHeaders = async (currentWorksheet) => {
   await Excel.run(async (context) => {
@@ -197,7 +87,8 @@ export const initializeProject = async (projectName, kickOffDate) => {
     await context.sync();
 
     await formatProjectHeaderRange(context, projectHeaderRange);
-    await initializeProjectCalendar(kickOffDate);
+    await addCalendar(kickOffDate, kickOffDate);
+
     await context.sync();
   }).catch((error) => {
     console.log("Error: " + error);
