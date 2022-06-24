@@ -1,21 +1,32 @@
-import { boldFontInRange } from "../fontUtils";
+import { boldFontInRange, colorFontInRange } from "../fontUtils";
 import { changeFillColor } from "../fillUtils";
 
 /**
  * Adds activity type to the selected cell in current worksheet.
  * @param {string} activityTypeTitle
  */
-export const addActivityType = async (activityTypeTitle) => {
+export const addActivityType = async (activityTypeTitle, projectActivityAddress) => {
   await Excel.run(async (context) => {
     const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
-    const currentActiveCell = context.workbook.getActiveCell();
-    currentActiveCell.load(["values", "address"]);
+    const cellBelowProjectActivityHeader = currentWorksheet.getRange(projectActivityAddress).getRowsBelow(1);
+    cellBelowProjectActivityHeader.load(["values", "address"]);
     await context.sync();
-    currentActiveCell.values = activityTypeTitle;
 
-    const currActiveCellRange = currentWorksheet.getRange(currentActiveCell.address);
-    await boldFontInRange(currActiveCellRange);
-    await changeFillColor(currActiveCellRange.getColumnsBefore(1), "#94C5EE");
+    let newRow = cellBelowProjectActivityHeader.getEntireRow();
+    if (cellBelowProjectActivityHeader.values[0][0] !== "") {
+      // Clears the fill brought down from the project activity header.
+      newRow = newRow.insert(Excel.InsertShiftDirection.down);
+      newRow.format.fill.clear();
+      const firstCol = newRow.getColumn(0);
+      await changeFillColor(firstCol, "#94C5EE");
+    }
+
+    // Did not reuse {cellBelowProjectActivityHeader} as its property affected after insert.
+    const projectActivityCell = currentWorksheet.getRange(projectActivityAddress).getRowsBelow(1);
+    projectActivityCell.values = activityTypeTitle;
+    await colorFontInRange(projectActivityCell, "black");
+    await boldFontInRange(projectActivityCell);
+    await changeFillColor(projectActivityCell.getColumnsBefore(1), "#94C5EE");
 
     await context.sync();
   }).catch((error) => {

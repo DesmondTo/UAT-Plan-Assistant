@@ -32,7 +32,7 @@ function AddActivityTypeForm() {
             <DefaultButton
               id={buttonId}
               onClick={async () => {
-                await addActivityType(activityTypeTitle);
+                await addActivityType(activityTypeTitle, projectActivity.address);
               }}
             >
               Add Activity Type
