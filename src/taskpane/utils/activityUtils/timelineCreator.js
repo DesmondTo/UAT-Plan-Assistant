@@ -1,4 +1,5 @@
 import { addCalendar } from "../projectUtils/projectCalendarCreator";
+import { getDayOfTheMonth, getDayDifference, getDayNumFromKickOffMonth } from "../dateUtils/dateGetter";
 
 /**
  * Adds timeline to the selected activity in current worksheet.
@@ -7,13 +8,48 @@ import { addCalendar } from "../projectUtils/projectCalendarCreator";
  */
 export const addTimeline = async (startDate, endDate) => {
   await Excel.run(async (context) => {
-    // const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
-    const currentActiveCell = context.workbook.getActiveCell();
-    currentActiveCell.load("address");
-    await context.sync();
+    const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
+    // Add the project calendar if it doesn't exist.
     await addCalendar(startDate, endDate);
 
+    const date = new Date(startDate);
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    let dayNumFromFirstDayOfKickOffMonth = 0;
+    await getDayNumFromKickOffMonth(year, month).then((dayNum) => {
+      dayNumFromFirstDayOfKickOffMonth += dayNum;
+    });
+
+    const currentActiveCell = context.workbook.getActiveCell();
+    currentActiveCell.load("rowIndex");
     await context.sync();
+
+    const startDateCell = currentWorksheet
+      .getRange()
+      .getRow(currentActiveCell.rowIndex)
+      .getColumn(dayNumFromFirstDayOfKickOffMonth + getDayOfTheMonth(startDate) + 3);
+    startDateCell.load(["rowIndex", "columnIndex"]);
+    await context.sync();
+
+    const dayNumDiff = getDayDifference(new Date(startDate), new Date(endDate));
+    const row = startDateCell.rowIndex;
+    const startingCol = startDateCell.columnIndex;
+    // Best practice to do split loop when loading properties.
+    const cellFillArr = [];
+    for (let col = 0; col <= dayNumDiff; col++) {
+      const currCell = currentWorksheet.getCell(row, startingCol + col);
+      currCell.load("format");
+      await context.sync();
+      const currCellFormat = currCell.format;
+      currCellFormat.load("fill");
+      await context.sync();
+      cellFillArr.push(currCellFormat.fill);
+    }
+
+    cellFillArr.forEach(async (cellFill) => {
+      cellFill.color = "#C7DFFA";
+      await context.sync();
+    });
   }).catch((error) => {
     console.log("Error: " + error);
     if (error instanceof OfficeExtension.Error) {
