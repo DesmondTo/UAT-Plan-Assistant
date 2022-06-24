@@ -10,8 +10,6 @@ const dropdownOptions = [
   { key: "addActType", text: "Add Activity Type" },
   { key: "addAct", text: "Add Activity" },
   { key: "addTl", text: "Add Timeline" },
-  { key: "addStat", text: "Add Status Key" },
-  { key: "addActPar", text: "Add Action Party" },
 ];
 
 function ActionDropdown({ selectAction }) {
