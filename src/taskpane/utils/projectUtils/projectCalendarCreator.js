@@ -1,4 +1,3 @@
-import { autoFitRange } from "./projectFormatter";
 import { formatMonthCalendar, formatWeekdayCell, formatDateCell } from "../projectUtils/projectCalendarFormatter";
 import { toShortDate, toWeekDay } from "../dateUtils/dateFormatter";
 import { getDayNumFromKickOffMonth, getDateStringArrayIncreasedByMonth } from "../dateUtils/dateGetter";
@@ -14,9 +13,9 @@ const addProjectCalendar = async (dateStr) => {
     const month = date.getMonth();
     const year = date.getFullYear();
 
-    let dayNumFromFirstDayOfKickOffMonth = 0;
+    let dayNumFromFirstDayOfKickOffMonth;
     await getDayNumFromKickOffMonth(year, month).then((dayNum) => {
-      dayNumFromFirstDayOfKickOffMonth += dayNum;
+      dayNumFromFirstDayOfKickOffMonth = dayNum;
     });
 
     const startingRange = currentWorksheet

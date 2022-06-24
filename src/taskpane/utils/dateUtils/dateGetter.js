@@ -1,6 +1,4 @@
-import { PROJECT_KICKOFF_DATE_CELL_INDEX } from "../../../constants/projectConstants";
-
-import { toMonth } from "../dateUtils/dateFormatter";
+import { getProjectKickOffDate } from "../projectUtils/projectDetailGetter";
 
 /**
  * Gets the year of the specified date string.
@@ -79,17 +77,17 @@ export const getDayNumFromKickOffMonth = async (year, month) => {
   let dayNum = 0;
 
   await Excel.run(async (context) => {
-    const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
-    let kickOffDate = currentWorksheet.getRange(PROJECT_KICKOFF_DATE_CELL_INDEX);
-    kickOffDate.load("values");
-    await context.sync();
+    let projectKickOffDate;
+    await getProjectKickOffDate().then((dateStr) => {
+      projectKickOffDate = dateStr;
+    });
+    const kickOffDateObj = new Date(projectKickOffDate);
+    const kickOffYear = kickOffDateObj.getFullYear();
+    const kickOffMonth = kickOffDateObj.getMonth();
+    // All the month calendars are started from 1, the first day of the month
+    dayNum = getDayDifference(new Date(kickOffYear, kickOffMonth, 1), new Date(year, month, 1));
 
-    kickOffDate = kickOffDate.values[0][0].replace("Kick-Off Date: ", ""); // Get the date in the value array.
-    const [kickOffDay, kickOffMonth, kickOffYear] = kickOffDate.split(" "); // Split the date into three entities.
-    const kickOffDateObj = new Date(kickOffYear, toMonth(kickOffMonth), 1); // Month is in string, change it to number.
-    dayNum = getDayDifference(kickOffDateObj, new Date(year, month, 1));
     await context.sync();
   });
-  
   return dayNum;
 };
