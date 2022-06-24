@@ -1,5 +1,5 @@
-import { autoFitRange, formatWeekdayCell } from "./projectFormatter";
-import { formatMonthCalendar } from "../projectUtils/projectCalendarFormatter";
+import { autoFitRange } from "./projectFormatter";
+import { formatMonthCalendar, formatWeekdayCell } from "../projectUtils/projectCalendarFormatter";
 import { toShortDate, toWeekDay } from "../dateUtils/dateFormatter";
 import { getDayNumFromKickOffMonth, getDateStringArrayIncreasedByMonth } from "../dateUtils/dateGetter";
 
