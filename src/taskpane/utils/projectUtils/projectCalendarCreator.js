@@ -19,7 +19,10 @@ const addProjectCalendar = async (dateStr) => {
       dayNumFromFirstDayOfKickOffMonth += dayNum;
     });
 
-    const startingRange = currentWorksheet.getRange().getRow(0).getColumn(dayNumFromFirstDayOfKickOffMonth + 3);
+    const startingRange = currentWorksheet
+      .getRange()
+      .getRow(0)
+      .getColumn(dayNumFromFirstDayOfKickOffMonth + 3);
     const dayNumOfTheMonth = new Date(year, month + 1, 0).getDate();
     const monthRange = startingRange.getColumnsAfter(dayNumOfTheMonth);
     monthRange.load(["values", "text"]);
