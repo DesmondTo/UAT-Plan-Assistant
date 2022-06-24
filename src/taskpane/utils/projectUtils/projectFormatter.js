@@ -3,9 +3,6 @@ import {
   PROJECT_NAME_RANGE_FONT_COLOR,
   PROJECT_COLUMN_HEADER_RANGE_FILL_COLOR,
   PROJECT_COLUMN_HEADER_RANGE_FONT_COLOR,
-  PROJECT_CALENDAR_MONTH_START_INDEX_INCLUSIVE,
-  PROJECT_CALENDAR_MONTH_CALENDAR_FILL_COLOR_DARK,
-  PROJECT_SHORT_DATE_FORMAT,
   PROJECT_SATURDAY_CALENDAR_CELL_FILL_COLOR,
   PROJECT_SUNDAY_CALENDAR_CELL_FILL_COLOR,
 } from "../../../constants/projectConstants";
@@ -104,25 +101,6 @@ export const formatProjectHeaderRange = async (context, projectHeaderRange) => {
     if (error instanceof OfficeExtension.Error) {
       console.log("Debug info: " + JSON.stringify(error.debugInfo));
     }
-  });
-};
-
-/**
- * Formats the initial month calendar of the project.
- * @param {Excel.Worksheet} currentWorksheet
- * @param {Excel.Range} initialMonthRange
- */
-export const formatInitialMonthRange = async (currentWorksheet, initialMonthRange) => {
-  await Excel.run(async (context) => {
-    currentWorksheet.getRange(PROJECT_CALENDAR_MONTH_START_INDEX_INCLUSIVE).format.fill.color =
-      PROJECT_CALENDAR_MONTH_CALENDAR_FILL_COLOR_DARK;
-    initialMonthRange.load(["numberFormat", "format"]);
-    await context.sync();
-
-    initialMonthRange.numberFormat = PROJECT_SHORT_DATE_FORMAT;
-    initialMonthRange.format.font.bold = true;
-    initialMonthRange.format.horizontalAlignment = "Center";
-    await context.sync();
   });
 };
 
