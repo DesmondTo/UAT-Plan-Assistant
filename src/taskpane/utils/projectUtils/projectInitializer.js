@@ -16,9 +16,10 @@ import {
   formatProjectKickOffDateRange,
   formatProjectColumnHeaderRange,
   formatProjectHeaderRange,
-  formatInitialMonthRange,
   formatWeekdayCell,
 } from "./projectFormatter";
+
+import { formatMonthCalendar } from "./projectCalendarFormatter";
 
 import { toLongDate, toShortDate, toWeekDay } from "../dateUtils/dateFormatter";
 
@@ -37,7 +38,10 @@ const initializeProjectMonthCalendar = async (kickOffDate, dayNums) => {
 
     initialMonthRange.merge();
     initialMonthRange.values = toShortDate(kickOffDate);
-    await formatInitialMonthRange(currentWorksheet, initialMonthRange);
+    const date = new Date(kickOffDate);
+    const kickOffMonth = date.getMonth();
+    const monthIsEven = kickOffMonth % 2 === 0;
+    await formatMonthCalendar(initialMonthRange, monthIsEven);
 
     await context.sync();
   });
@@ -45,9 +49,9 @@ const initializeProjectMonthCalendar = async (kickOffDate, dayNums) => {
 
 /**
  * Initializes the project weekday calendar from the kick-off date.
- * @param {string} kickOffDate A date of when the project started.
+ * @param {string} firstWeekday The first weekday of month when the project started.
  * @param {number} kickOffDay
- * @param {number} dayNums The number of days until the end of the month starting from the kick-off date.
+ * @param {number} dayNums The number of days in the of the kick-off month.
  */
 const initializeProjectWeekdayCalendar = async (firstWeekday, dayNums) => {
   await Excel.run(async (context) => {
@@ -103,9 +107,11 @@ const initializeProjectCalendar = async (kickOffDate) => {
   await Excel.run(async (context) => {
     const kickOffDateObj = new Date(kickOffDate);
     const kickOffYear = kickOffDateObj.getFullYear();
-    const kickOffMonth = kickOffDateObj.getMonth() + 1;
+    const kickOffMonth = kickOffDateObj.getMonth();
     const firstWeekday = new Date(kickOffYear, kickOffMonth, 1).getDay();
-    const dayNums = new Date(kickOffYear, kickOffMonth, 0).getDate();
+    // A hackish way to get the number of days in the month, 
+    // as it checks from the next month, need to plus one to the month.
+    const dayNums = new Date(kickOffYear, kickOffMonth + 1, 0).getDate();
 
     await initializeProjectMonthCalendar(kickOffDate, dayNums);
     await initializeProjectWeekdayCalendar(firstWeekday, dayNums);
