@@ -21,13 +21,12 @@ export const getAllProjectActivity = async () => {
       const currRowValue = currRow.values[0][0]; // To get the first cell in the range.
       if (currRowValue.startsWith("Project Activity:")) {
         const shortenedText = currRowValue.replace("Project Activity:", "");
-        currRow.load(["rowIndex", "columnIndex"]);
+        currRow.load("address");
         await context.sync();
         allProjectActivity.push({
-          key: `${shortenedText}: (${currRow.rowIndex}, ${currRow.columnIndex})`,
+          key: `${shortenedText}: ${currRow.address}`,
           text: shortenedText,
-          rowIndex: currRow.rowIndex,
-          columnIndex: currRow.columnIndex,
+          address: currRow.address,
         });
       }
     }
