@@ -12,7 +12,7 @@ const dropdownStyles = {
 const stackTokens = { childrenGap: 20 };
 
 function ProjectActivityDropdown({selectProjectActivity}) {
-  const selectedProjectActivity = React.useState()[0];
+  const selectedProjectActivity = useState()[0];
 
   const onChange = (event, projectActivityObj) => {
     selectProjectActivity(projectActivityObj);
@@ -33,7 +33,7 @@ function ProjectActivityDropdown({selectProjectActivity}) {
   return (
     <Stack tokens={stackTokens}>
       <Dropdown
-        label="Select an existing project activity:"
+        label="Step 1: Select an existing project activity:"
         selectedKey={selectedProjectActivity ? selectedProjectActivity.key : undefined}
         onChange={onChange}
         placeholder="Select an option"
