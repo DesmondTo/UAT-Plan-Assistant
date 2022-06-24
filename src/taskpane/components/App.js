@@ -9,14 +9,6 @@ import AddProjectActivityForm from "./form/AddProjectActivityForm";
 import AddActivityTypeForm from "./form/AddActivityTypeForm";
 import AddActivityForm from "./form/AddActivityForm";
 import AddTimelineForm from "./form/AddTimelineForm";
-import AddStatusKeyForm from "./form/AddStatusKeyForm";
-import AddActionPartyForm from "./form/AddActionPartyForm";
-import EditProjectForm from "./form/EditProjectForm";
-import EditProjectActivityForm from "./form/EditProjectActivityForm";
-import EditActivityTypeForm from "./form/EditActivityTypeForm";
-import EditActivityForm from "./form/EditActivityForm";
-import EditStatusKeyForm from "./form/EditStatusKeyForm";
-import EditActionPartyForm from "./form/EditActionPartyForm";
 
 const actionComponent = {
   addProj: <InitializeProjectForm />,
@@ -24,14 +16,6 @@ const actionComponent = {
   addActType: <AddActivityTypeForm />,
   addAct: <AddActivityForm />,
   addTl: <AddTimelineForm />,
-  addStat: <AddStatusKeyForm />,
-  addActPar: <AddActionPartyForm />,
-  editProj: <EditProjectForm />,
-  editProjAct: <EditProjectActivityForm />,
-  editActType: <EditActivityTypeForm />,
-  editAct: <EditActivityForm />,
-  editStat: <EditStatusKeyForm />,
-  editActPar: <EditActionPartyForm />,
 };
 
 /* global console, Excel, require */

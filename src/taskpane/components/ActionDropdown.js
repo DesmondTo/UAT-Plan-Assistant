@@ -12,14 +12,6 @@ const dropdownOptions = [
   { key: "addTl", text: "Add Timeline" },
   { key: "addStat", text: "Add Status Key" },
   { key: "addActPar", text: "Add Action Party" },
-  { key: "divider", text: "-", itemType: DropdownMenuItemType.Divider },
-  { key: "edit", text: "Edit", itemType: DropdownMenuItemType.Header },
-  { key: "editProj", text: "Edit Project" },
-  { key: "editProjAct", text: "Edit Project Activity" },
-  { key: "editActType", text: "Edit Activity Type" },
-  { key: "editAct", text: "Edit Activity" },
-  { key: "editStat", text: "Edit Status Key" },
-  { key: "editActPar", text: "Edit Action Party" },
 ];
 
 function ActionDropdown({ selectAction }) {
