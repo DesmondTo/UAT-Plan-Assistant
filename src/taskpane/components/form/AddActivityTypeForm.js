@@ -11,7 +11,7 @@ import { addActivityType } from "../../utils/activityUtils/activityTypeCreator";
 
 function AddActivityTypeForm() {
   const buttonId = useId("addActivityTypeButton");
-  const [activityTypeTitle, setActivityTypeTitle] = React.useState("");
+  const [activityTypeTitle, setActivityTypeTitle] = useState("");
 
   return (
     <form>
