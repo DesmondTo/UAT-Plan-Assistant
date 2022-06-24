@@ -11,7 +11,7 @@ const dropdownStyles = {
 
 const stackTokens = { childrenGap: 20 };
 
-function ProjectActivityDropdown({selectProjectActivity}) {
+function ProjectActivityDropdown({ selectProjectActivity }) {
   const selectedProjectActivity = useState()[0];
 
   const onChange = (event, projectActivityObj) => {
@@ -20,13 +20,7 @@ function ProjectActivityDropdown({selectProjectActivity}) {
 
   const [projectActivities, setProjectActivities] = useState([]);
   useEffect(async () => {
-    let projectActivityArray = await getAllProjectActivity();
-    projectActivityArray.forEach((projectActivity, index) => {
-      projectActivityArray[index] = {
-        key: projectActivity.address,
-        text: projectActivity.title,
-      };
-    });
+    const projectActivityArray = await getAllProjectActivity();
     setProjectActivities([...projectActivityArray]);
   }, []);
 

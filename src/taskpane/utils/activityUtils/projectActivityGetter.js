@@ -17,13 +17,18 @@ export const getAllProjectActivity = async () => {
       const currRow = projectActivityColumns.getRow(row);
       currRow.load("values");
       await context.sync();
-      
+
       const currRowValue = currRow.values[0][0]; // To get the first cell in the range.
       if (currRowValue.startsWith("Project Activity:")) {
-        const shortenedTitle = currRowValue.replace("Project Activity:", "");
-        currRow.load("address");
+        const shortenedText = currRowValue.replace("Project Activity:", "");
+        currRow.load(["rowIndex", "columnIndex"]);
         await context.sync();
-        allProjectActivity.push({ title: shortenedTitle, address: currRow.address });
+        allProjectActivity.push({
+          key: `${shortenedText}: (${currRow.rowIndex}, ${currRow.columnIndex})`,
+          text: shortenedText,
+          rowIndex: currRow.rowIndex,
+          columnIndex: currRow.columnIndex,
+        });
       }
     }
 
