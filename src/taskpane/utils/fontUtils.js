@@ -1,5 +1,5 @@
 /**
- * Bolds font in the specified range.
+ * Chooses to bold or unbold font in the specified range.
  * @param {Excel.Range} range
  * @param {boolean} isBold
  */
