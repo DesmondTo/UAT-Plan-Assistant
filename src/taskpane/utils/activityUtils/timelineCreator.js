@@ -3,10 +3,11 @@ import { getDayOfTheMonth, getDayDifference, getDayNumFromKickOffMonth } from ".
 
 /**
  * Adds timeline to the selected activity in current worksheet.
+ * @param {Excel.Range} activityAddress
  * @param {string} startDate
  * @param {string} endDate
  */
-export const addTimeline = async (startDate, endDate) => {
+export const addTimeline = async (activityAddress, startDate, endDate) => {
   await Excel.run(async (context) => {
     const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
     // Add the project calendar if it doesn't exist.
@@ -20,13 +21,13 @@ export const addTimeline = async (startDate, endDate) => {
       dayNumFromFirstDayOfKickOffMonth += dayNum;
     });
 
-    const currentActiveCell = context.workbook.getActiveCell();
-    currentActiveCell.load("rowIndex");
+    const activityCell = currentWorksheet.getRange(activityAddress);
+    activityCell.load("rowIndex");
     await context.sync();
 
     const startDateCell = currentWorksheet
       .getRange()
-      .getRow(currentActiveCell.rowIndex)
+      .getRow(activityCell.rowIndex)
       .getColumn(dayNumFromFirstDayOfKickOffMonth + getDayOfTheMonth(startDate) + 3);
     startDateCell.load(["rowIndex", "columnIndex"]);
     await context.sync();
