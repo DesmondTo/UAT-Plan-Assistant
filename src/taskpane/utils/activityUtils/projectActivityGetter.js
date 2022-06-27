@@ -2,7 +2,7 @@ import { getProjectRowCount } from "../projectUtils/projectDetailGetter";
 
 /**
  * Gets all the project activity in current worksheet.
- * Each project activity is a JavaScript object containing title and address.
+ * Each project activity is a JavaScript object containing key, text and address.
  * @returns An array of project activity.
  */
 export const getAllProjectActivity = async () => {
