@@ -1,10 +1,11 @@
 /**
  * Bolds font in the specified range.
  * @param {Excel.Range} range
+ * @param {boolean} isBold
  */
-export const boldFontInRange = async (range) => {
+export const boldFontInRange = async (range, isBold=true) => {
   await Excel.run(async (context) => {
-    range.format.font.bold = true;
+    range.format.font.bold = isBold;
     await context.sync();
   });
 };
