@@ -22,11 +22,11 @@ export const addActivityType = async (activityTypeTitle, projectActivityAddress)
     }
 
     // Did not reuse {cellBelowProjectActivityHeader} as its property affected after insert.
-    const projectActivityCell = currentWorksheet.getRange(projectActivityAddress).getRowsBelow(1);
-    projectActivityCell.values = activityTypeTitle;
-    await colorFontInRange(projectActivityCell, "black");
-    await boldFontInRange(projectActivityCell);
-    await changeFillColor(projectActivityCell.getColumnsBefore(1), "#94C5EE");
+    const activityTypeCell = currentWorksheet.getRange(projectActivityAddress).getRowsBelow(1);
+    activityTypeCell.values = activityTypeTitle;
+    await colorFontInRange(activityTypeCell, "black");
+    await boldFontInRange(activityTypeCell);
+    await changeFillColor(activityTypeCell.getColumnsBefore(1), "#94C5EE");
 
     await context.sync();
   }).catch((error) => {
