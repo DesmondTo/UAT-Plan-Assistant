@@ -18,7 +18,13 @@ function AddTimelineForm() {
   return (
     <form>
       <ProjectActivityDropdown selectProjectActivity={setProjectActivity} />
-      {projectActivity && <ActivityDropdown selectedProjectActivity={projectActivity} selectActivity={setActivity} />}
+      {projectActivity && (
+        <ActivityDropdown
+          key={projectActivity.address} // To help React recognize the changes in project activity
+          selectedProjectActivity={projectActivity}
+          selectActivity={setActivity}
+        />
+      )}
       {projectActivity && activity && (
         <>
           <TextField

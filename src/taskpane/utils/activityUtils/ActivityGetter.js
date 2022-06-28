@@ -10,15 +10,15 @@ export const getActivityOfProjectActivity = async (projectActivityAddress) => {
   await Excel.run(async (context) => {
     const currentWorksheet = context.workbook.worksheets.getActiveWorksheet();
     const projectActivityRange = currentWorksheet.getRange(projectActivityAddress);
-    
+
     let currCell = projectActivityRange.getRowsBelow(1);
-    currCell.load("format");
+    currCell.load(["format", "values"]);
     await context.sync();
     let currCellFormat = currCell.format;
     currCellFormat.load(["fill", "font"]);
     await context.sync();
 
-    while (currCellFormat.fill.color === "#FFFFFF") {
+    while (currCellFormat.fill.color === "#FFFFFF" && currCell.values[0][0] !== '') {
       currCell.load(["values", "address"]);
       await context.sync();
       if (!currCellFormat.font.bold) {
@@ -29,7 +29,7 @@ export const getActivityOfProjectActivity = async (projectActivityAddress) => {
         });
       }
       currCell = currCell.getRowsBelow(1);
-      currCell.load("format");
+      currCell.load(["format", "values"]);
       await context.sync();
 
       currCellFormat = currCell.format;
